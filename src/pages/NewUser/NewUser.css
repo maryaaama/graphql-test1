@@ -1,0 +1,21 @@
+.form1{
+    max-width: 40rem;
+    margin-top: 10rem;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+    background-color: aliceblue;
+}
+.email{
+    margin-top: 2rem;  
+}
+.text{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+   
+  
+}
+.button1{
+   
+    margin-top: 1rem;
+}
