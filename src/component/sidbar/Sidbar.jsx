@@ -69,12 +69,12 @@ export default function Sidbar() {
         </ListSubheader>
       }
     >
-      <Link to='/NewUser'>
+      <Link to='/CreateUser'>
       <ListItemButton>
         <ListItemIcon>
           <PersonAddAltIcon />
         </ListItemIcon>
-        <ListItemText primary="NewUser" />
+        <ListItemText primary="CreateUser" />
       </ListItemButton>
       </Link>
       <Link to='/UserList'>

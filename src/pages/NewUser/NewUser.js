@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useState ,useEffect} from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Button from '@mui/material/Button';
@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import './NewUser.css';
+
 const validationSchema = yup.object({
   email: yup
     .string('Enter your email')
@@ -22,15 +23,9 @@ const validationSchema = yup.object({
 });
 
 export default function NewUser() {
-
-   const [user, setUser] = useState([
-    {id:0,
-    email:'maryam@example.com',
-    password: 'maryam',
-  }
-   ])
   
-
+    const [users, setUsers] = useState([]);
+  
   const formik = useFormik({
     initialValues: {
       email: 'maryam@example.com',
@@ -40,26 +35,25 @@ export default function NewUser() {
     validationSchema: validationSchema,
 
     onSubmit: (values) => {
-      console.log(values)
-      if (values.password===values.confirmpassword){
-        let newUser = {
-          id: user.length + 1,
-          email:values.email,
-          password:values.password,
+      console.log(values);
+      if (values.password === values.confirmpassword) {
+        // Update the user state
+        setUsers((prevUser) => [
+          ...prevUser,
+          {
+            id: prevUser.length + 1,
+            email: values.email,
+            password: values.password,
+          },
+        ]);
       }
-
-      setUser(prevState => {
-          return [...prevState, newUser]
-      })
-     console.log(user);
-     
-      }
-      else{
+      else {
         alert('password and confirmpassword not match')
       }
     },
   });
-
+  
+ 
   return (
 
 
@@ -116,7 +110,8 @@ export default function NewUser() {
       </form>
 </Box>
          </Container>
-      
+
+       
     </div>
 
   );
