@@ -13,8 +13,8 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import HomeIcon from '@mui/icons-material/Home';
 import StarBorder from '@mui/icons-material/StarBorder';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import Inventory2Icon from '@mui/icons-material/Inventory2';
 import GroupIcon from '@mui/icons-material/Group';
+import LoginIcon from '@mui/icons-material/Login';
 import { Link } from 'react-router-dom';
 
 export default function Sidbar() {
@@ -44,31 +44,6 @@ export default function Sidbar() {
         <ListItemText primary="Home" />
       </ListItemButton>
       </Link>
-      <ListItemButton>
-        <ListItemIcon>
-          <DraftsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Drafts" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <DraftsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Drafts" />
-      </ListItemButton>
-
-    </List>
-    
-    <List
-      sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-      subheader={
-        <ListSubheader component="div" id="nested-list-subheader">
-         Quick Mnue
-        </ListSubheader>
-      }
-    >
       <Link to='/CreateUser'>
       <ListItemButton>
         <ListItemIcon>
@@ -77,20 +52,12 @@ export default function Sidbar() {
         <ListItemText primary="CreateUser" />
       </ListItemButton>
       </Link>
-      <Link to='/UserList'>
+      <Link to='/LogIn' >
       <ListItemButton>
         <ListItemIcon>
-          <GroupIcon />
+          <LoginIcon />
         </ListItemIcon>
-        <ListItemText primary="Users" />
-      </ListItemButton>
-      </Link>
-      <Link to='/Jobs'>
-      <ListItemButton>
-        <ListItemIcon>
-          <Inventory2Icon />
-        </ListItemIcon>
-        <ListItemText primary="Jobs" />
+        <ListItemText primary="LogIn" />
       </ListItemButton>
       </Link>
     </List>

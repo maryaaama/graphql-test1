@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Button from '@mui/material/Button';
@@ -10,21 +10,27 @@ import { useMutation, gql } from '@apollo/client';
 const CREATE_USER = gql`
   mutation CreateUser($email: String!, $password: String!) {
     createUser(email: $email, password: $password) {
-      status
       message
+      status
     }
   }
 `;
 
+
 const validationSchema = yup.object({
   email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
-  password: yup.string('Enter your password').min(4, 'Password should be of minimum 4 characters length').required('Password is required'),
-  confirmpassword: yup.string('Enter your confirmpassword').min(4, 'confirmpassword should be of minimum 4 characters length').required('confirmpassword is required'),
+  password: yup.string('Enter your password').min(6, 'Password should be of minimum 4 characters length').required('Password is required'),
+  confirmpassword: yup.string('Enter your confirmpassword').min(6, 'confirmpassword should be of minimum 4 characters length').required('confirmpassword is required'),
 });
 
 export default function CreateUser() {
-    const [createUserMutation] = useMutation(CREATE_USER);
+  const [createUser, { loading, error  }] = useMutation(CREATE_USER);
+   
   const [users, setUsers] = useState([]);
+  useEffect(() => {
+    // This code block will run whenever the user state is updated
+    console.log(users);
+  }, [users]); 
 
   const formik = useFormik({
     initialValues: {
@@ -36,35 +42,35 @@ export default function CreateUser() {
 
     onSubmit: async (values) => {
       console.log(values);
-
+    
       if (values.password === values.confirmpassword) {
         try {
-
-          // Call the GraphQL mutation
-
-          const result = await createUserMutation({
+          const { data } = await createUser({
+            mutation: CREATE_USER,
             variables: {
               email: values.email,
               password: values.password,
-             
             },
-          }); 
+          });
+          console.log('message:', data.createUser.message);
+          console.log('status:', data.createUser.status);
          
-        }  
-        catch (error) {
-            if (error.graphQLErrors) {
-              console.error('GraphQL Errors:', error.graphQLErrors);
-            }
-            if (error.networkError) {
-              console.error('Network Error:', error.networkError);
-            }
-          }
-
-      } else {
-        alert('Password and confirmpassword dos not match');
+          //navigate(`/?email=${values.email}&password=${values.password}`);
+        } catch (error) {
+          console.error('error: ', error);
+          alert('error: ' + error);
+        }
+        console.log(values);
+      }
+      else{
+        alert('match password and confirmpassword');
       }
     },
-  });
+    });
+    
+
+  if (loading) return 'Submitting...';
+  if (error) return `Submission error! ${error.message}`;
 
   return (
     <div className='form1'>

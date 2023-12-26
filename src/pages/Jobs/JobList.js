@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import './JobList.css';
+
 const bull = (
   <Box
     component="span"
@@ -14,6 +15,7 @@ const bull = (
     •
   </Box>
 );
+
 
 export default function JobList() {
   return (

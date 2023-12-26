@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { Link } from 'react-router-dom';
 const Item = styled(Paper)(({ theme }) => ({
  
   padding: theme.spacing(1),
@@ -40,7 +41,9 @@ export default function () {
       <LanguageIcon color="action" className='icon'/>
        </Badge></Item>
       <Item className='iconColor'> <SettingsIcon className='icon'/></Item>
+      <Link to='/LogIn'>
       <Item className='iconColor'> <Avatar src="/broken-image.jpg" className='icon' /></Item>
+      </Link>
       </Stack>
         </div>
 

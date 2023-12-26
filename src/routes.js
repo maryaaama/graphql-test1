@@ -1,13 +1,13 @@
  import Home from './pages/Home/Home';
  import Jobs from './pages/Jobs/Jobs.js';
- import UserList from './pages/Users/UserList';
+ import Users from './pages/Users/UserList';
  import CreateUser from './pages/NewUser/CreateUser.js';
-
+ import LogIn from './pages/LogIn/LogIn.js';
  let routes =[
     {path:'/' , element:<Home/>},
-    {path:'/UserList' , element:<UserList/>},
+    {path:'/Users' , element:<Users/>},
     {path:'/Jobs' , element:<Jobs/>},
     {path:'/CreateUser' , element:<CreateUser/>},
-   
+    {path:'/LogIn' , element:<LogIn/>},
  ];
  export default routes ;

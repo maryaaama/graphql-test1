@@ -1,32 +1,21 @@
-import React from 'react';
-import { useQuery, gql } from '@apollo/client';
+import React from 'react'
+import WorkIcon from '@mui/icons-material/Work';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { Link } from 'react-router-dom';
 
-const GET_USER = gql`
-  query GetUser {
-    users {
-      id
-      email
-      password
-    }
-  }
-`;
-
-export default function UserList() {
-  const { loading, error, data } = useQuery(GET_USER);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
+export default function Home() {
   return (
     <div>
-      {data.users.map(({ id, email, password }) => (
-        <div key={id}>
-          <h3>{email}</h3>
-          <br />
-          <p>{password}</p>
-          <br />
-        </div>
-      ))}
+      <Link to='/Jobs'>
+      <ListItemButton>
+        <ListItemIcon>
+          <WorkIcon />
+        </ListItemIcon>
+        <ListItemText primary="Jobs" />
+      </ListItemButton>
+      </Link>
     </div>
-  );
+  )
 }
