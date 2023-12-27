@@ -16,6 +16,7 @@ import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import GroupIcon from '@mui/icons-material/Group';
 import LoginIcon from '@mui/icons-material/Login';
 import { Link } from 'react-router-dom';
+import WorkIcon from '@mui/icons-material/Work';
 
 export default function Sidbar() {
   const [open, setOpen] = React.useState(true);
@@ -44,12 +45,12 @@ export default function Sidbar() {
         <ListItemText primary="Home" />
       </ListItemButton>
       </Link>
-      <Link to='/CreateUser'>
+      <Link to='/Jobs'>
       <ListItemButton>
         <ListItemIcon>
-          <PersonAddAltIcon />
+          <WorkIcon />
         </ListItemIcon>
-        <ListItemText primary="CreateUser" />
+        <ListItemText primary="Jobs" />
       </ListItemButton>
       </Link>
       <Link to='/LogIn' >

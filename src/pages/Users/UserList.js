@@ -1,21 +1,16 @@
-import React from 'react'
-import WorkIcon from '@mui/icons-material/Work';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { Link } from 'react-router-dom';
-
+import React from 'react';
+import Grid from '@mui/material/Grid';
+import Sidbar from '../../component/sidbar/Sidbar';
 export default function Home() {
   return (
-    <div>
-      <Link to='/Jobs'>
-      <ListItemButton>
-        <ListItemIcon>
-          <WorkIcon />
-        </ListItemIcon>
-        <ListItemText primary="Jobs" />
-      </ListItemButton>
-      </Link>
-    </div>
+    <>
+  <Grid  container spacing={2} columns={16}>
+  <Grid item xs={4}> <Sidbar/> </Grid>
+  <Grid item xs={12}> 
+  </Grid>
+  </Grid>  
+   
+    
+    </> 
   )
 }
