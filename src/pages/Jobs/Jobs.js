@@ -7,7 +7,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import JobList from './JobList';
 import './Jobs.css';
 import { useMutation, gql } from '@apollo/client';
-import SelectSkills from './SelectSkills';
+import SkillSelected from './SkillSelected';
 
 const CREATE_JOBS = gql`
   mutation CreateJobs($title: String!, $description: String!, $city: String!, $skills: [String]!) {
@@ -118,7 +118,13 @@ export default function Jobs() {
               />
             </div>
             <div>
-              <Field name="skills" component={SelectSkills} />
+            <Field
+              name="skills"
+              component={({ field, form }) => (
+             <SkillSelected label="Skills" name="skills" {...field} form={form} />
+            )}
+            />
+
             </div>
             <Button color="primary" variant="contained" fullWidth type="submit">
               Submit

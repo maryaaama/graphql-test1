@@ -8,8 +8,7 @@ import Home from './pages/Home/Home';
  import Users from './pages/Users/UserList';
  import CreateUser from './pages/NewUser/CreateUser.js';
  import LogIn from './pages/LogIn/LogIn.js';
- import { Link } from 'react-router-dom';
- import ListItemText from '@mui/material/ListItemText';
+ import '@shopify/polaris/build/esm/styles.css';
 
 function App (){ 
   return (

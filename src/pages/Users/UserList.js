@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import Sidbar from '../../component/sidbar/Sidbar';
-export default function Home() {
+export default function Users() {
   return (
     <>
   <Grid  container spacing={2} columns={16}>
