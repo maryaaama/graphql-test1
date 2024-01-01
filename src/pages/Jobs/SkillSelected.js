@@ -46,6 +46,7 @@ export default function SkillSelected({ label, name }) {
     }
     return undefined;
   }, [meta.error, meta.touched]);
+
   const updateText = useCallback((value) => {
     setInputValue(value);
   }, []);
@@ -81,7 +82,7 @@ export default function SkillSelected({ label, name }) {
     </Tag>
   ));
   
-    const optionsMarkUp = data && data.skills && data.skills.skills
+   const optionsMarkUp = data && data.skills && data.skills.skills
   ? data.skills.skills.map((option) => {
       const { title, id } = option;
       return (

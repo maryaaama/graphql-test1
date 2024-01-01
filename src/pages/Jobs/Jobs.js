@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+
+import React,{useState, useCallback}  from 'react';
+
 import { useFormik, Field, Form, Formik } from 'formik'; // Include ErrorMessage
 import * as yup from 'yup';
 import Button from '@mui/material/Button';
@@ -7,8 +9,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import JobList from './JobList';
 import './Jobs.css';
 import { useMutation, gql } from '@apollo/client';
-import SkillSelected from './SkillSelected';
 
+import MultiAutocompleteExample from './SelectSkills'
 const CREATE_JOBS = gql`
   mutation CreateJobs($title: String!, $description: String!, $city: String!, $skills: [String]!) {
     createJobs(input: { title: $title, description: $description, city: $city, skills: $skills }) {
@@ -121,7 +123,7 @@ export default function Jobs() {
             <Field
               name="skills"
               component={({ field, form }) => (
-             <SkillSelected label="Skills" name="skills" {...field} form={form} />
+             <MultiAutocompleteExample label="Skills" name="skills" {...field} form={form} />
             )}
             />
 
