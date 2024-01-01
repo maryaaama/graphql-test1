@@ -1,119 +1,111 @@
-import React,{ useState } from 'react';
-import { useFormik } from 'formik';
+import React, { useCallback } from "react";
+import { Formik,Field, Form } from "formik";
+import { Card, Button, FormLayout } from "@shopify/polaris";
+import {TextField,Select} from "@satel/formik-polaris";
 import * as yup from 'yup';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import './NewJob.css';
+import { useMutation, gql } from '@apollo/client';
+import  SelectSkills from './SelectSkills';
+import SkillFounder from './SkillFounder'
+import JobList from './JobList';
+const CREATE_JOB = gql`
+  mutation CreateJob($title: String!, $description: String!, $city: String!, $skills: [String]!) {
+    createJob(input: { title: $title, description: $description, city: $city, skills: $skills }) {
+      job {
+        title
+        description
+        city
+        skills {
+          title
+          id
+        }
+      }
+      status
+      message
+    }
+  }
+`;
 
+const OPTIONS = [
+  { label: "tehran", value: "tehran" },
+  { label: "ahvaz", value: "ahvaz" },
+  { label: "shiraz", value: 'shiraz' },
+  { label: "esfahan", value: 'esfahan' },
+  { label: "mashhad", value: 'mashhad' },
+  { label: "tabriz", value: 'tabriz' },
+  { label: "zanjan", value: 'zanjan' },
+  { label: "boshehr", value: 'boshehr' },
+];
 const validationSchema = yup.object({
-  title: yup
-    .string('Enter your title')
-    .required('title is required'),
-    description: yup
-    .string('Enter your password')
-    .min(4, 'Password should be of minimum 4 characters length')
-    .required('Password is required'),
-    city:yup
-    .string('Enter your password')
-    .min(4, 'Password should be of minimum 4 characters length')
-    .required('Password is required'),
-   
+  title: yup.string('Enter your title').required('Title is required'),
+  description: yup.string('Enter your description').required('description is required'),
+  city: yup.string('Enter your city').required('City is required'),
 });
-const cities = ['tehran','ahvaz','mashhad','tabriz','shiraz','esfahan'];
-const top15skils = ['frontend', 'python', 'C++',  'Nodejs',  'backend', "javascript"];
-
-export default function NewJob() {
-
-const [todo,setTodo]=useState({});
-const [jobList,setJobList]=useState([]);
-
-  const formik = useFormik({
-    initialValues: {
-      title: '',
-      description: '',
-      city:null,
-      skils:[],
-    },
-    validationSchema: validationSchema,
-   
-    onSubmit: (values) => {
-      console.log(values);
-      setTodo(values);
-      console.log('todo',todo);
-    },
-  });
-  return (
-    <div className='container'>
-      <form onSubmit={formik.handleSubmit} className='text'>
-        <div className='title'>
-        <TextField
-          fullWidth
-          id="title"
-          name="title"
-          label="Title"
-          value={formik.values.title}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.title && Boolean(formik.errors.title)}
-          helperText={formik.touched.title && formik.errors.title}
-        />
-        </div>
-        <div className='description'>
-        <TextField
-          fullWidth
-          id="description"
-          name="description"
-          label="Description"
-          value={formik.values.description}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.description && Boolean(formik.errors.description)}
-          helperText={formik.touched.description && formik.errors.description}
-        />
-        </div>
-        <div className='city'>
-        <Autocomplete
-        id="city"
-        options={cities}
-        getOptionLabel={(option) => option}
-        value={formik.values.city}
-        onChange={(e, value) => formik.setFieldValue('city', value)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="City"
-            error={formik.touched.city && Boolean(formik.errors.city)}
-            helperText={formik.touched.city && formik.errors.city}
-          />
-        )}
-      />
-        </div>
-        <div className='skils'>
-        <Autocomplete
-        multiple
-        id="skils"
-        options={top15skils}
-        getOptionLabel={(option) => option}
-        value={formik.values.skils}
-        onChange={(e, value) => formik.setFieldValue('skils', value)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Skils"
-            error={formik.touched.skils && Boolean(formik.errors.skils)}
-            helperText={formik.touched.skils && formik.errors.skils}
-          />
-        )}
-      />
-
-        </div>
-        <Button color="primary" variant="contained" fullWidth type="submit">
-          Submit
-        </Button>
-      </form>
-    </div>
-  )
+const initialValues= {
+  title: '',
+  description:'',
+  city:'',
+  skills:[],
+ 
 }
+ export default function NewJob() {
+  const [createJob, { error }] = useMutation(CREATE_JOB);
+
+  const handleSubmit =  useCallback(
+    
+    async (values) => {
+      console.log(values);
+      try {
+        const { data } = await createJob({
+          variables: {
+            title: values.title,
+            description: values.description,
+            city: values.city,
+            skills: values.skills,
+          },
+        });
+        if (data.createJob.status) {
+         console.log('yas');
+        }
+      } catch {
+        console.log(error);
+      }
+    },
+    [createJob, error],
+  );
+  return (
+    <div className="contain">
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ values, dirty }) => (
+        <>
+          <Form>
+            <Card sectioned>
+              <FormLayout>
+                <TextField label="Title" name="title" />
+                <TextField label="Description" name="description"  multiline={4}/>
+                  <Select label="city" name="city" options={OPTIONS} />
+                  <div className="skills">
+                  <Field label="Skills" name="skills" as={SkillFounder} />
+
+                   </div>
+                <Button submit primary disabled={!dirty}>
+                  Save
+                </Button>
+              </FormLayout>
+            </Card>
+          </Form>
+          <br />
+          <Card subdued sectioned title="Internal Form Values">
+            <pre>{JSON.stringify(values, null, 2)}</pre>
+          </Card>
+        </>
+      )}
+    </Formik>
+    </div>
+  );
+}
+

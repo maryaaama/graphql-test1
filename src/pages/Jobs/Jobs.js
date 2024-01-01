@@ -9,7 +9,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import JobList from './JobList';
 import './Jobs.css';
 import { useMutation, gql } from '@apollo/client';
-
 import MultiAutocompleteExample from './SelectSkills'
 const CREATE_JOBS = gql`
   mutation CreateJobs($title: String!, $description: String!, $city: String!, $skills: [String]!) {

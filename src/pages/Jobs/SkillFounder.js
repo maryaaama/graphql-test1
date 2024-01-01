@@ -1,35 +1,32 @@
-import { useQuery ,gql} from "@apollo/client";
-import { Combobox, Listbox, Tag, Text,BlockStack} from "@shopify/polaris";
+import { useQuery, gql} from "@apollo/client";
+import { Combobox, Listbox, Stack, Tag, TextContainer } from "@shopify/polaris";
 import { useField, useFormikContext } from "formik";
 import { useCallback, useMemo, useState } from "react";
 
 
-const SKILLS =gql`
-query Skills($title: String!, $limit: Int) {
-  skills(title: $title, limit: $limit) {
-    skills {
-      title
-      id
-      
+const SKILLS_QUERY = gql`
+  query Skills($title: String!, $limit: Int) {
+    skills(title: $title, limit: $limit) {
+      skills {
+        title
+        id
+      }
     }
-    message
-    status
   }
-}
 `;
-export default function SkillSelected({ label, name }) {
+export default function SkillFounder({ label, name }) {
   const [inputValue, setInputValue] = useState("");
 
   const { setFieldValue, setFieldError } = useFormikContext();
 
-  const { data } = useQuery(SKILLS, {
+  const { data } = useQuery(SKILLS_QUERY, {
     variables: {
       title: inputValue,
       limit: 5,
     },
   });
   const [field, meta] = useField(name);
-  const [selectedOptions, setSelectedOptions] = useState(Array.isArray(field.value) ? field.value : []);
+  const [selectedOptions, setSelectedOptions] = useState(field.value);
 
   console.log();
 
@@ -46,7 +43,6 @@ export default function SkillSelected({ label, name }) {
     }
     return undefined;
   }, [meta.error, meta.touched]);
-
   const updateText = useCallback((value) => {
     setInputValue(value);
   }, []);
@@ -75,30 +71,27 @@ export default function SkillSelected({ label, name }) {
     },
     [selectedOptions],
   );
-
   const tagsMarkup = selectedOptions.map((option) => (
     <Tag key={`option-${option}`} onRemove={removeTag(option)}>
       {option}
     </Tag>
   ));
-  
-   const optionsMarkUp = data && data.skills && data.skills.skills
-  ? data.skills.skills.map((option) => {
-      const { title, id } = option;
-      return (
-        <Listbox.Option
-          key={`${title + id}`}
-          value={title}
-          selected={selectedOptions.includes(title)}
-          accessibilityLabel={label}
-        >
-          {title}
-        </Listbox.Option>
-      );
-    })
-  : null;
 
-
+  const optionsMarkUp = data
+    ? data.skills.skills.map((option) => {
+        const { title, id } = option;
+        return (
+          <Listbox.Option
+            key={`${title + id}`}
+            value={title}
+            selected={selectedOptions.includes(title)}
+            accessibilityLabel={label}
+          >
+            {title}
+          </Listbox.Option>
+        );
+      })
+    : null;
 
   const noResults = !selectedOptions.includes(inputValue);
   const actionMarkup = noResults ? (
@@ -129,11 +122,7 @@ export default function SkillSelected({ label, name }) {
           </Listbox>
         ) : null}
       </Combobox>
-      <Text>
-        <div style={{ marginTop: 15 }}>
-          <BlockStack>{tagsMarkup}</BlockStack>
-        </div>
-      </Text>
+      
     </>
   );
 }

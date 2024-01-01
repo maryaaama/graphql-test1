@@ -1,8 +1,7 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, {useEffect, useState, useCallback, useMemo } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { Autocomplete, Tag, BlockStack } from '@shopify/polaris';
-import { useFormikContext } from 'formik';
-
+import { Autocomplete, Tag, BlockStack,TextField } from '@shopify/polaris';
+import { useField, useFormikContext } from "formik";
 const SKILLS_QUERY = gql`
   query Skills($title: String!, $limit: Int) {
     skills(title: $title, limit: $limit) {
@@ -14,13 +13,29 @@ const SKILLS_QUERY = gql`
   }
 `;
 
-const MultiAutocompleteExample = ({ label, name }) => {
-  const { setFieldValue } = useFormikContext();
 
+const SelectSkills = ({ label, name }) => {
+  const deselectedOptions = useMemo(
+    () => [
+      {value: 'front-end', label: 'front-end'},
+      {value: 'nodejs', label: 'nodejs'},
+      {value: 'back-end', label: 'back-end'},
+      {value: 'django', label: 'django'},
+      {value: 'java', label: 'java'},
+    ],
+    [],
+  );
+ 
+  
+  const { setFieldValue } = useFormikContext({});
+  const [field, meta] = useField(name);
+
+  const [selectedOptions, setSelectedOptions] = useState(['front-end']);
   const [inputValue, setInputValue] = useState('');
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [options, setOptions] = useState(deselectedOptions)
+ 
 
-  const { data } = useQuery(SKILLS_QUERY, {
+  /*const { data } = useQuery(SKILLS_QUERY, {
     variables: {
       title: inputValue,
       limit: 5,
@@ -35,7 +50,95 @@ const MultiAutocompleteExample = ({ label, name }) => {
       }));
     }
     return [];
-  }, [data]);
+  }, [data]);*/
+ 
+
+/*when onchange*/
+    const updateText = useCallback(
+      (value) => {
+        setInputValue(value);
+        setFieldValue(inputValue)
+        if (value === '') {
+          setOptions(deselectedOptions);
+          return;
+        }
+  /*set value nd lable*/
+        const filterRegex = new RegExp(value, 'i');
+        const resultOptions = deselectedOptions.filter((option) =>
+          option.lable.match(filterRegex),
+        );
+        setOptions(resultOptions);
+      },
+      [deselectedOptions],
+    );
+  /*for remove tag*/
+    const removeTag = useCallback(
+      (tag) => () => {
+        const options = [...selectedOptions];
+        options.splice(options.indexOf(tag), 1);
+        setSelectedOptions(options);
+      },
+      [selectedOptions],
+    );
+  
+    const verticalContentMarkup =
+      selectedOptions.length > 0 ? (
+        <BlockStack spacing="extraTight" alignment="center">
+          {selectedOptions.map((option) => {
+            let tagLabel = '';
+            tagLabel = option.replace('_', ' ');
+            tagLabel = titleCase(tagLabel);
+            return (
+              <Tag key={`option${option}`} onRemove={removeTag(option)}>
+                {tagLabel}
+              </Tag>
+            );
+          })}
+        </BlockStack>
+      ) : null;
+  
+    const textField = (
+      <Autocomplete.TextField
+        onChange={updateText}
+        label={label}
+        name={name}
+        value={inputValue}
+        placeholder="select your skills"
+        verticalContent={verticalContentMarkup}
+        autoComplete="off"
+      />
+    );
+    useEffect(()=>{
+      console.log(selectedOptions)
+    },[selectedOptions])
+    
+    return (
+      <div style={{height: '325px'}}>
+        <Autocomplete
+          allowMultiple
+          options={options}
+          selected={selectedOptions}
+          textField={textField}
+          onSelect={setSelectedOptions}
+          listTitle="Suggested Tags"
+        />
+      </div>
+    );
+  
+    function titleCase(string) {
+      return string
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.replace(word[0], word[0].toUpperCase()))
+        .join('');
+    }
+
+  /*const error = useMemo(() => {
+    if (meta.error && meta.touched) {
+      return meta.error;
+    }
+    return undefined;
+  }, [meta.error, meta.touched]);
 
   const updateText = useCallback((value) => {
     setInputValue(value);
@@ -61,7 +164,7 @@ const MultiAutocompleteExample = ({ label, name }) => {
     ) : null;
 
   const textField = (
-    <Autocomplete.TextField
+    <TextField
       onChange={updateText}
       label="Skills"
       value={inputValue}
@@ -72,9 +175,11 @@ const MultiAutocompleteExample = ({ label, name }) => {
   );
 
   return (
-    <div style={{ height: '325px' }}>
+    <div className='autocomp'>
       <Autocomplete
-        allowMultiple
+       allowMultiple
+        label={label}
+        
         options={options}
         selected={selectedOptions}
         textField={textField}
@@ -82,159 +187,9 @@ const MultiAutocompleteExample = ({ label, name }) => {
         listTitle="Skills"
       />
     </div>
-  );
+  );*/
 };
 
-export default MultiAutocompleteExample;
+export default  SelectSkills;
 
 
-/*import React from 'react';
-import {useState, useCallback, useMemo} from 'react';
-import { gql, useQuery} from '@apollo/client';
-import { useFormik  } from 'formik';
-import * as yup from 'yup';
-import {BlockStack, Tag,Listbox, Autocomplete} from '@shopify/polaris';
-import { useField, useFormikContext } from "formik";
-
-const SKILLS =gql`
-query Skills($title: String!, $limit: Int) {
-  skills(title: $title, limit: $limit) {
-    skills {
-      title
-      id
-      
-    }
-    message
-    status
-  }
-}
-`;
-
-
-
-
-export default function MultiAutocompleteExample({ label, name }) {
- 
-  const deselectedOptions = useMemo(
-    () => [
-      {value: 'front-end', label: 'front-end'},
-      {value: 'python', label: 'python'},
-      {value: 'c++', label: 'c++'},
-      {value: 'Nodejs', label: 'Nodejs'},
-      {value: 'back-end', label: 'back-end'},
-    ],
-
-
-    [],
-  );
-  const [field, meta] = useField(name);
-  const [selectedOptions, setSelectedOptions] = useState(Array.isArray(field.value) ? field.value : []);
-  const [inputValue, setInputValue] = useState('');
-  const [options, setOptions] = useState(deselectedOptions);
-
-  const { data } = useQuery(SKILLS, {
-    variables: {
-      title: inputValue,
-      limit: 5,
-    },
-  });
-  const error = useMemo(() => {
-    if (meta.error && meta.touched) {
-      return meta.error;
-    }
-    return undefined;
-  }, [meta.error, meta.touched]);
- 
-
-  const updateText = useCallback(
-    (value) => {
-      setInputValue(value);
-
-      if (value === '') {
-        setOptions(deselectedOptions);
-        return;
-      }
-
-      const filterRegex = new RegExp(value, 'i');
-      const resultOptions = deselectedOptions.filter((option) =>
-        option.label.match(filterRegex),
-      );
-
-      setOptions(resultOptions);
-    },
-    [deselectedOptions],
-  );
-
-  const removeTag = useCallback(
-    (tag) => () => {
-      const options = [...selectedOptions];
-      options.splice(options.indexOf(tag), 1);
-      setSelectedOptions(options);
-    },
-    [selectedOptions],
-  );
-
-  const verticalContentMarkup =
-    selectedOptions.length > 0 ? (
-      <BlockStack spacing="extraTight" alignment="center">
-        {selectedOptions.map((option) => {
-          let tagLabel = '';
-          tagLabel = option.replace('_', ' ');
-          tagLabel = titleCase(tagLabel);
-          return (
-            <Tag key={`option${option}`} onRemove={removeTag(option)}>
-              {tagLabel}
-            </Tag>
-          );
-        })}
-      </BlockStack>
-    ) : null;
-
-    const optionsMarkUp = data && data.skills && data.skills.skills
-  ? data.skills.skills.map((option) => {
-      const { title, id } = option;
-      return (
-        <Listbox.Option
-          key={`${title + id}`}
-          value={title}
-          selected={selectedOptions.includes(title)}
-          accessibilityLabel={label}
-        >
-          {title}
-        </Listbox.Option>
-      );
-    })
-  : null;
-  const textField = (
-    
-    <Autocomplete.TextField
-      onChange={updateText}
-      label="Tags"
-      value={inputValue}
-      placeholder="select job skills"
-      verticalContent={verticalContentMarkup}
-      autoComplete="off"
-    />
-  );
-
-  return (
-    <div style={{height: '325px'}}>
-      <Autocomplete
-        allowMultiple
-        options={options}
-        selected={selectedOptions}
-        textField={textField}
-        onSelect={setSelectedOptions}
-        listTitle="skills"
-      />
-    </div>
-  );
-
-  function titleCase(string) {
-    return string
-      .toLowerCase()
-      .split(' ')
-      .map((word) => word.replace(word[0], word[0].toUpperCase()))
-      .join('');
-  }
-}*/
