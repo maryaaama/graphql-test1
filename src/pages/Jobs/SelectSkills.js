@@ -27,7 +27,7 @@ const SelectSkills = ({ label, name }) => {
   );
  
   
-  const { setFieldValue } = useFormikContext({});
+  const { setFieldValue ,setFieldError} = useFormikContext({});
   const [field, meta] = useField(name);
 
   const [selectedOptions, setSelectedOptions] = useState(['front-end']);
@@ -40,9 +40,23 @@ const SelectSkills = ({ label, name }) => {
       title: inputValue,
       limit: 5,
     },
-  });
+  });*/
+const handleBlur = useCallback(() => {
+    field.onBlur({ target: { name } });
+  }, [field, name]);
+  const handleFocus = useCallback(() => {
+    setFieldError(name, "");
+  }, [name, setFieldError]);
 
-  const options = useMemo(() => {
+  const error = useMemo(() => {
+    if (meta.error && meta.touched) {
+      return meta.error;
+    }
+    return undefined;
+  }, [meta.error, meta.touched]);
+ 
+
+ /* const options = useMemo(() => {
     if (data && data.skills && data.skills.skills) {
       return data.skills.skills.map((option) => ({
         value: option.title,
@@ -57,7 +71,7 @@ const SelectSkills = ({ label, name }) => {
     const updateText = useCallback(
       (value) => {
         setInputValue(value);
-        setFieldValue(inputValue)
+        setFieldValue(name, [...selectedOptions,value]);
         if (value === '') {
           setOptions(deselectedOptions);
           return;
@@ -65,12 +79,27 @@ const SelectSkills = ({ label, name }) => {
   /*set value nd lable*/
         const filterRegex = new RegExp(value, 'i');
         const resultOptions = deselectedOptions.filter((option) =>
-          option.lable.match(filterRegex),
+          option.label.match(filterRegex),
         );
         setOptions(resultOptions);
       },
       [deselectedOptions],
     );
+    /*const updateSelection = useCallback(
+      (selected) => {
+        if (selectedOptions.includes(selected)) {
+          setSelectedOptions(
+            selectedOptions.filter((option) => option !== selected),
+          );
+        } else {
+          setSelectedOptions([...selectedOptions, selected]);
+          setFieldValue(name, [...selectedOptions, selected]);
+        }
+  
+        updateText("");
+      },
+      [selectedOptions, updateText],
+    );*/
   /*for remove tag*/
     const removeTag = useCallback(
       (tag) => () => {
@@ -120,7 +149,11 @@ const SelectSkills = ({ label, name }) => {
           selected={selectedOptions}
           textField={textField}
           onSelect={setSelectedOptions}
+          error={error ? "required !" : false}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           listTitle="Suggested Tags"
+
         />
       </div>
     );

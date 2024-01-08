@@ -1,12 +1,12 @@
 import React, { useCallback } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Formik,Field, Form } from "formik";
-import { Card, Button, FormLayout } from "@shopify/polaris";
+import { Card, Button, FormLayout ,ContextualSaveBar,Frame} from "@shopify/polaris";
 import {TextField,Select} from "@satel/formik-polaris";
 import * as yup from 'yup';
 import './NewJob.css';
 import { useMutation, gql } from '@apollo/client';
-import  SelectSkills from './SelectSkills';
-import SkillFounder from './SkillFounder'
+import Skills from "./Skills";
 import JobList from './JobList';
 const CREATE_JOB = gql`
   mutation CreateJob($title: String!, $description: String!, $city: String!, $skills: [String]!) {
@@ -36,11 +36,16 @@ const OPTIONS = [
   { label: "zanjan", value: 'zanjan' },
   { label: "boshehr", value: 'boshehr' },
 ];
+
+
 const validationSchema = yup.object({
   title: yup.string('Enter your title').required('Title is required'),
   description: yup.string('Enter your description').required('description is required'),
   city: yup.string('Enter your city').required('City is required'),
+  skills: yup.array().min(1).required("required !"),
 });
+
+
 const initialValues= {
   title: '',
   description:'',
@@ -50,7 +55,7 @@ const initialValues= {
 }
  export default function NewJob() {
   const [createJob, { error }] = useMutation(CREATE_JOB);
-
+  const navigate = useNavigate();
   const handleSubmit =  useCallback(
     
     async (values) => {
@@ -75,26 +80,37 @@ const initialValues= {
   );
   return (
     <div className="contain">
+      <Frame>
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ values, dirty }) => (
+      {({ values, dirty ,submitForm, isSubmitting}) => (
         <>
           <Form>
+          <ContextualSaveBar
+               discardAction={{
+                onAction: () => {
+                console.log('yes');
+                  },
+                   }}
+                 saveAction={{
+                 loading: isSubmitting,
+                 disabled: !dirty,
+                 onAction: submitForm,
+                   }}
+               />
+
             <Card sectioned>
               <FormLayout>
                 <TextField label="Title" name="title" />
                 <TextField label="Description" name="description"  multiline={4}/>
                   <Select label="city" name="city" options={OPTIONS} />
                   <div className="skills">
-                  <Field label="Skills" name="skills" as={SkillFounder} />
-
+                  <Skills  label="Skills" name="skills" />
                    </div>
-                <Button submit primary disabled={!dirty}>
-                  Save
-                </Button>
+                {/*<Button submit primary disabled={!dirty}> Save </Button>*/}
               </FormLayout>
             </Card>
           </Form>
@@ -105,6 +121,7 @@ const initialValues= {
         </>
       )}
     </Formik>
+    </Frame>
     </div>
   );
 }

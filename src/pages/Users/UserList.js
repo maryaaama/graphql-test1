@@ -1,14 +1,17 @@
 import React from 'react';
-import Grid from '@mui/material/Grid';
-import Sidbar from '../../component/sidbar/Sidbar';
+import {Page, Grid} from '@shopify/polaris';
+
+import SidBBBar from '../../component/sidbar/SidBar';
+
 export default function Users() {
   return (
     <>
-  <Grid  container spacing={2} columns={16}>
-  <Grid item xs={4}> <Sidbar/> </Grid>
-  <Grid item xs={12}> 
-  </Grid>
-  </Grid>  
+  <Page fullWidth>
+    <Grid>
+       <Grid.Cell   columnSpan={{xs: 6, sm: 3, md: 3, lg: 6, xl: 6}}> <SidBBBar/> </Grid.Cell>
+       <Grid.Cell   columnSpan={{xs: 6, sm: 3, md: 3, lg: 6, xl: 6}}> </Grid.Cell>
+    </Grid>
+  </Page>
    
     
     </> 
