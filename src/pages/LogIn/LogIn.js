@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import {useMutation, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import './LogIn.css';
 export const LOGIN_USER = gql`
   mutation LoginUser($email: String!, $password: String!) {
     login(email: $email, password: $password) {

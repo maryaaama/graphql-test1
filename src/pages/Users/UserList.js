@@ -1,21 +1,19 @@
-import React from 'react'
-import WorkIcon from '@mui/icons-material/Work';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import {Page, Grid} from '@shopify/polaris';
 
-export default function Home() {
+import SidBBBar from '../../component/sidbar/SidBar';
+
+export default function Users() {
   return (
-    <div>
-      <Link to='/Jobs'>
-      <ListItemButton>
-        <ListItemIcon>
-          <WorkIcon />
-        </ListItemIcon>
-        <ListItemText primary="Jobs" />
-      </ListItemButton>
-      </Link>
-    </div>
+    <>
+  <Page fullWidth>
+    <Grid>
+       <Grid.Cell   columnSpan={{xs: 6, sm: 3, md: 3, lg: 6, xl: 6}}> <SidBBBar/> </Grid.Cell>
+       <Grid.Cell   columnSpan={{xs: 6, sm: 3, md: 3, lg: 6, xl: 6}}> </Grid.Cell>
+    </Grid>
+  </Page>
+   
+    
+    </> 
   )
 }

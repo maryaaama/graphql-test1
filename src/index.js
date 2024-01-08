@@ -4,8 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
+import '@shopify/polaris/build/esm/styles.css';
 const client = new ApolloClient({
 
   uri: 'http://localhost:4000/graphql',
@@ -19,7 +20,9 @@ root.render(
 
   <ApolloProvider client={client}>
   <BrowserRouter>
+ 
     <App />
+    
   </BrowserRouter>
   </ApolloProvider>
 );

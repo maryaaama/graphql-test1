@@ -6,7 +6,9 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { useMutation, gql } from '@apollo/client';
-
+import { useNavigate } from 'react-router-dom';
+import LogIn from '../LogIn/LogIn';
+import './CreatUser.css'
 const CREATE_USER = gql`
   mutation CreateUser($email: String!, $password: String!) {
     createUser(email: $email, password: $password) {
@@ -25,7 +27,7 @@ const validationSchema = yup.object({
 
 export default function CreateUser() {
   const [createUser, { loading, error  }] = useMutation(CREATE_USER);
-   
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   useEffect(() => {
     // This code block will run whenever the user state is updated
@@ -54,7 +56,7 @@ export default function CreateUser() {
           });
           console.log('message:', data.createUser.message);
           console.log('status:', data.createUser.status);
-         
+          navigate('/LogIn');
           //navigate(`/?email=${values.email}&password=${values.password}`);
         } catch (error) {
           console.error('error: ', error);
@@ -73,7 +75,7 @@ export default function CreateUser() {
   if (error) return `Submission error! ${error.message}`;
 
   return (
-    <div className='form1'>
+    <div className='form2'>
       <Container maxWidth="sm">
         <Box sx={{ height: '30vh' }}>
           <form onSubmit={formik.handleSubmit}>
