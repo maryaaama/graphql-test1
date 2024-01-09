@@ -1,8 +1,6 @@
 import React from 'react';
 import './App.css';
 import {Routes , Route} from 'react-router-dom';
-import TopBar from './component/TopBar/TopBar';
-import Grid from '@mui/material/Grid';
 import Home from './pages/Home/Home';
  import NewJob from './pages/Jobs/NewJob.js';
  import Users from './pages/Users/UserList';
@@ -14,9 +12,7 @@ function App (){
   return (
   <>
   <AppProvider>
-  <TopBar></TopBar>
-  
-  <Grid item xs={12}> 
+ 
     <Routes>
         <Route path='/' element={<Home/>} />
         <Route path='/Users' element={<Users/>} />
@@ -24,7 +20,7 @@ function App (){
         <Route path='/CreateUser' element={<CreateUser/>} />
         <Route path='/LogIn' element={<LogIn/>} />
     </Routes>
-  </Grid>
+
   </AppProvider>
   </>
 

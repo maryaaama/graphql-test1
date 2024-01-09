@@ -1,21 +1,13 @@
 
 import React, { useState , useEffect } from 'react';
-import { useFormik } from 'formik';
+import { Formik, Form } from "formik";
 import * as yup from 'yup';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
+import {TextField} from "@satel/formik-polaris";
+import { Card, Button} from "@shopify/polaris";
 import {useMutation, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import { LOGIN_USER } from "../../Graphql/Mutations";
 import './LogIn.css';
-export const LOGIN_USER = gql`
-  mutation LoginUser($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-    }
-  }
-`;
 
 const validationSchema = yup.object({
     email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
@@ -23,20 +15,17 @@ const validationSchema = yup.object({
     
   });
 
-
 export default function LogIn() {
     const navigate = useNavigate();
     const [loginUser, { loading, error }] = useMutation(LOGIN_USER);
 
-     const formik = useFormik({
-        initialValues: {
+     const initialValues={
           email: 'maryam@example.com',
           password: 'maryam',   
-        },
+        }
 
-        validationSchema: validationSchema,
-
-        onSubmit: async (values) => {
+       
+       const handleSubmit= async (values) => {
           try {
             const { data } = await loginUser({
               mutation: LOGIN_USER,
@@ -59,58 +48,32 @@ export default function LogIn() {
           console.log('values: ', values);
           localStorage.setItem('email',values.email);
           localStorage.setItem('password',values.password);
-          /*
-            if (values.email === email_store && values.password === password_store) {
-              console.log(data.user.email);
-            }
-          */
-        },
-        });
+         
+        }
+      
         if (loading) return null;
         if (error) return `Error! ${error}`;
         
       
   return (
     <div className='form1'>
-    <Container maxWidth="sm">
-      <Box sx={{ height: '30vh' }}>
-        <form onSubmit={formik.handleSubmit}>
-          <div className='email'>
-            <TextField
-              fullWidth
-              id="email"
-              name="email"
-              label="Email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.email && Boolean(formik.errors.email)}
-              helperText={formik.touched.email && formik.errors.email}
-            />
-          </div>
-          <div className='text'>
-            <TextField
-              fullWidth
-              id="password"
-              name="password"
-              label="Password"
-              type="password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
-            />
-          </div>
-         
-          <div className='button1'>
-            <Button color="primary" variant="contained" fullWidth type="submit">
-             LogIn
-            </Button>
-          </div>
-        </form>
-      </Box>
-    </Container>
-  </div>
-  )
-}
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ values, dirty }) => (
+        <>
+          <Form>
+            <Card>
+              <TextField name="email" label="Email" />
+              <TextField name="password" label="Password" type="password" />
+              <Button submit primary > LogIn </Button>
+           </Card>
+         </Form>
+        </>
+      )}
+      </Formik>
+    </div>
+       )
+    }

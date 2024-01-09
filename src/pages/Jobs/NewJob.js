@@ -7,24 +7,8 @@ import * as yup from 'yup';
 import './NewJob.css';
 import { useMutation, gql } from '@apollo/client';
 import Skills from "./Skills";
+import { CREATE_JOB } from "../../Graphql/Mutations";
 import JobList from './JobList';
-const CREATE_JOB = gql`
-  mutation CreateJob($title: String!, $description: String!, $city: String!, $skills: [String]!) {
-    createJob(input: { title: $title, description: $description, city: $city, skills: $skills }) {
-      job {
-        title
-        description
-        city
-        skills {
-          title
-          id
-        }
-      }
-      status
-      message
-    }
-  }
-`;
 
 const OPTIONS = [
   { label: "tehran", value: "tehran" },
@@ -54,6 +38,7 @@ const initialValues= {
  
 }
  export default function NewJob() {
+
   const [createJob, { error }] = useMutation(CREATE_JOB);
   const navigate = useNavigate();
   const handleSubmit =  useCallback(
@@ -110,7 +95,7 @@ const initialValues= {
                   <div className="skills">
                   <Skills  label="Skills" name="skills" />
                    </div>
-                {/*<Button submit primary disabled={!dirty}> Save </Button>*/}
+                <Button submit primary disabled={!dirty}> Save </Button>
               </FormLayout>
             </Card>
           </Form>

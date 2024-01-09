@@ -1,6 +1,5 @@
 import React from 'react';
 import {Page, Grid} from '@shopify/polaris';
-
 import SidBBBar from '../../component/sidbar/SidBar';
 
 export default function Users() {

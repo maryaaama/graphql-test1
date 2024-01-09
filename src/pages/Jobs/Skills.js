@@ -7,7 +7,7 @@ const Skills = ({ label, ...props }) => {
     const { setFieldValue , setFieldError } = useFormikContext();
     const [field, meta] = useField(props);
 
-    const [selectedTags, setSelectedTags] = useState(['Rustic']);
+    const [selectedTags, setSelectedTags] = useState(['FrontEnd']);
     const [value, setValue] = useState('');
     const [suggestion, setSuggestion] = useState('');
    
@@ -58,7 +58,7 @@ const Skills = ({ label, ...props }) => {
       [updateSelection],
     );
     const getAllTags = useCallback(() => {
-      const savedTags = ['Rustic', 'Antique', 'Vinyl', 'Vintage', 'Refurbished'];
+      const savedTags = ['BackEnd', 'FrontEnd', 'React', 'JavaScript', 'Pyton'];
       return [...new Set([...savedTags, ...selectedTags].sort())];
     }, [selectedTags]);
   
